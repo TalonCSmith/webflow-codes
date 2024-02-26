@@ -1,0 +1,111 @@
+<script>
+window.onload = function() {
+    // Get the input element by its ID
+    const inputElement = document.getElementById("Product-Page-2");
+
+    // Check if the input element exists
+    if (inputElement) {
+        // Set the value of the input field to "poop"
+        inputElement.value = "{{wf {&quot;path&quot;:&quot;name&quot;,&quot;type&quot;:&quot;PlainText&quot;\} }}";
+    } else {
+        console.error("Input element not found.");
+    }
+};
+</script>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  // Get the product name from the attribute
+  var productName = document.querySelector('[review="product-name"]').textContent;
+
+  // Get all the review items
+  var reviewItems = document.querySelectorAll('[review="product-item"]');
+
+  // Loop through each review item
+  reviewItems.forEach(function(item) {
+    // Get the review name from the attribute
+    var reviewName = item.querySelector('[review="product-review"]').textContent;
+
+    // Check if the review belongs to the current product
+    if (reviewName === productName) {
+      // Show the review item
+      item.style.display = 'block';
+    } else {
+      // Hide the review item
+      item.style.display = 'none';
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Function to count CMS items with the same product name
+  function countCMSItems(collectionListClassName, productName) {
+    const collectionList = document.querySelector(`.${collectionListClassName}`);
+    let itemCount = 0;
+
+    // Loop through each review item
+    collectionList.querySelectorAll('.w-dyn-item').forEach(item => {
+      const reviewName = item.querySelector('[review="product-review"]').textContent;
+      if (reviewName === productName) {
+        itemCount++;
+      }
+    });
+
+    return itemCount;
+  }
+
+  // Function to calculate the average rating
+  function calculateAverageRating(collectionListClassName, productName) {
+    const collectionList = document.querySelector(`.${collectionListClassName}`);
+    
+    // Replace 'review_rating' with your actual rating text element class name
+    const ratingElements = collectionList.querySelectorAll('.review_rating');
+    let totalRating = 0;
+    let ratingCount = 0;
+
+    ratingElements.forEach((ratingElement) => {
+      const reviewItem = ratingElement.closest('[review="product-item"]');
+      const reviewName = reviewItem.querySelector('[review="product-review"]').textContent;
+      
+      // Check if the review belongs to the current product
+      if (reviewName === productName) {
+        const rating = parseFloat(ratingElement.textContent);
+        if (!isNaN(rating)) {
+          totalRating += rating;
+          ratingCount++;
+        }
+      }
+    });
+
+    if (ratingCount > 0) {
+      return totalRating / ratingCount;
+    } else {
+      return 0; // Default to 0 if there are no ratings
+    }
+  }
+
+  // Get the product name from the attribute
+  var productName = document.querySelector('[review="product-name"]').textContent;
+
+  // Replace 'review_list' with your actual CMS collection list class name
+  const collectionListClassName = 'review_list';
+
+  // Get the item count
+  const itemCount = countCMSItems(collectionListClassName, productName);
+
+  // Get the average rating
+  const averageRating = calculateAverageRating(collectionListClassName, productName);
+
+  // Update the element with the class name '.review_total' with the item count
+  const totalElement = document.querySelector('.review_total');
+  totalElement.textContent = `${itemCount}`;
+
+  // Update the element with the class name '.review_average' with the average rating
+  const averageElement = document.querySelector('.review_average');
+  averageElement.textContent = `${averageRating.toFixed(1)}`;
+  const averageElement2 = document.querySelector('.review_average_2');
+  averageElement2.textContent = `${averageRating.toFixed(1)}`;
+});
+</script>
